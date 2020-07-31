@@ -14194,7 +14194,7 @@ Your top_20 looks like the solution list! Nice job.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">user_item</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;article_id&#39;</span><span class="p">])[</span><span class="s1">&#39;article_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
@@ -14795,7 +14795,7 @@ The 3 most similar users to user 46 are: [4201, 3782, 23]
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[78]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_top_sorted_users</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">user_item</span><span class="o">=</span><span class="n">user_item</span><span class="p">):</span>
@@ -14818,21 +14818,30 @@ The 3 most similar users to user 46 are: [4201, 3782, 23]
 <span class="sd">     </span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Your code here</span>
-    
-    <span class="n">neighbors_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;neighbor_id&#39;</span><span class="p">,</span> <span class="s1">&#39;similarity&#39;</span><span class="p">,</span> <span class="s1">&#39;num_interactions&#39;</span><span class="p">])</span>
+    <span class="n">df_article_views</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">df_sims</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;neighbor_id&#39;</span><span class="p">,</span> <span class="s1">&#39;similarity&#39;</span><span class="p">,</span> <span class="s1">&#39;num_interactions&#39;</span><span class="p">])</span> <span class="c1">#df_sims  #neighbors_df</span>
     
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">user_item</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+        
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">similarity</span> <span class="o">=</span> <span class="n">user_item</span><span class="p">[</span><span class="n">user_item</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">]</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">user_item</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">num_interactions</span> <span class="o">=</span> <span class="n">user_item</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-        <span class="n">neighbors_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">similarity</span><span class="p">,</span> <span class="n">num_interactions</span><span class="p">]</span>
+        <span class="n">df_sims</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">similarity</span><span class="p">,</span> <span class="n">num_interactions</span><span class="p">]</span>
         
+    <span class="n">df_sims</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;num_interactions&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df_sims</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;user_id&#39;</span>
     
+
+    <span class="n">neighbors_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_sims</span><span class="p">,</span> <span class="n">df_article_views</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+    <span class="n">neighbors_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">neighbors_df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">user_id</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">neighbors_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+
     <span class="n">neighbors_df</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors_df</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
-    <span class="n">neighbors_df</span><span class="p">[</span><span class="s1">&#39;neighbor_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors_df</span><span class="p">[</span><span class="s1">&#39;neighbor_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
-    <span class="n">neighbors_df</span> <span class="o">=</span> <span class="n">neighbors_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">,</span> <span class="s1">&#39;neighbor_id&#39;</span><span class="p">],</span> <span class="n">ascending</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>
-    
+    <span class="n">neighbors_df</span><span class="p">[</span><span class="s1">&#39;article_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors_df</span><span class="p">[</span><span class="s1">&#39;article_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+    <span class="n">neighbors_df</span> <span class="o">=</span> <span class="n">neighbors_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;similarity&#39;</span><span class="p">,</span> <span class="s1">&#39;article_id&#39;</span> <span class="p">],</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">neighbors_df</span> <span class="c1"># Return the dataframe specified in the doc_string</span>
 
 
@@ -14889,7 +14898,7 @@ The 3 most similar users to user 46 are: [4201, 3782, 23]
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Quick spot check - don&#39;t change this code - just use it to test your functions</span>
@@ -14938,7 +14947,7 @@ The top 10 recommendations for user 20 are the following article names:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[79]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_top_sorted_users</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1">#the most similar to yser number 1</span>
@@ -14954,7 +14963,7 @@ The top 10 recommendations for user 20 are the following article names:
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[18]:</div>
+    <div class="prompt output_prompt">Out[79]:</div>
 
 
 
@@ -14979,7 +14988,13 @@ The top 10 recommendations for user 20 are the following article names:
       <th></th>
       <th>neighbor_id</th>
       <th>similarity</th>
-      <th>num_interactions</th>
+      <th>article_id</th>
+    </tr>
+    <tr>
+      <th>user_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -14987,19 +15002,19 @@ The top 10 recommendations for user 20 are the following article names:
       <th>3933</th>
       <td>3933</td>
       <td>35</td>
-      <td>35</td>
+      <td>45</td>
     </tr>
     <tr>
       <th>23</th>
       <td>23</td>
       <td>17</td>
-      <td>135</td>
+      <td>364</td>
     </tr>
     <tr>
       <th>3782</th>
       <td>3782</td>
       <td>17</td>
-      <td>135</td>
+      <td>363</td>
     </tr>
   </tbody>
 </table>
@@ -15014,7 +15029,7 @@ The top 10 recommendations for user 20 are the following article names:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[80]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_top_sorted_users</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">131</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>   <span class="c1">#the 10th similar user is 242 </span>
@@ -15030,7 +15045,7 @@ The top 10 recommendations for user 20 are the following article names:
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[17]:</div>
+    <div class="prompt output_prompt">Out[80]:</div>
 
 
 
@@ -15055,7 +15070,13 @@ The top 10 recommendations for user 20 are the following article names:
       <th></th>
       <th>neighbor_id</th>
       <th>similarity</th>
-      <th>num_interactions</th>
+      <th>article_id</th>
+    </tr>
+    <tr>
+      <th>user_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -15063,61 +15084,61 @@ The top 10 recommendations for user 20 are the following article names:
       <th>3870</th>
       <td>3870</td>
       <td>74</td>
-      <td>75</td>
+      <td>144</td>
     </tr>
     <tr>
       <th>3782</th>
       <td>3782</td>
       <td>39</td>
-      <td>135</td>
+      <td>363</td>
     </tr>
     <tr>
       <th>23</th>
       <td>23</td>
       <td>38</td>
-      <td>135</td>
+      <td>364</td>
     </tr>
     <tr>
       <th>203</th>
       <td>203</td>
       <td>33</td>
-      <td>96</td>
+      <td>160</td>
     </tr>
     <tr>
       <th>4459</th>
       <td>4459</td>
       <td>33</td>
-      <td>96</td>
-    </tr>
-    <tr>
-      <th>49</th>
-      <td>49</td>
-      <td>29</td>
-      <td>101</td>
+      <td>158</td>
     </tr>
     <tr>
       <th>98</th>
       <td>98</td>
       <td>29</td>
-      <td>97</td>
-    </tr>
-    <tr>
-      <th>3697</th>
-      <td>3697</td>
-      <td>29</td>
-      <td>100</td>
+      <td>170</td>
     </tr>
     <tr>
       <th>3764</th>
       <td>3764</td>
       <td>29</td>
-      <td>97</td>
+      <td>169</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>49</td>
+      <td>29</td>
+      <td>147</td>
+    </tr>
+    <tr>
+      <th>3697</th>
+      <td>3697</td>
+      <td>29</td>
+      <td>145</td>
     </tr>
     <tr>
       <th>242</th>
       <td>242</td>
       <td>25</td>
-      <td>59</td>
+      <td>148</td>
     </tr>
   </tbody>
 </table>
@@ -15599,7 +15620,7 @@ The top 10 recommendations for user 20 are the following article names:
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Provide your response here.</strong></p>
-
+<h1 id="Here-we-used-SVD-becasue-we-don't-have-missing-values-for-the-user_item_matrix-so-we-can-build-our-u,-s-and-vt-matrices">Here we used SVD becasue we don't have missing values for the user_item_matrix so we can build our u, s and vt matrices<a class="anchor-link" href="#Here-we-used-SVD-becasue-we-don't-have-missing-values-for-the-user_item_matrix-so-we-can-build-our-u,-s-and-vt-matrices">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -16039,6 +16060,20 @@ The top 10 recommendations for user 20 are the following article names:
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="The-accuracy-in-the-training-increased-as-the-number-of-latent-features-increased-but,-decreased-in-testing-set-as-the-latent-features-increased.">The accuracy in the training increased as the number of latent features increased but, decreased in testing set as the latent features increased.<a class="anchor-link" href="#The-accuracy-in-the-training-increased-as-the-number-of-latent-features-increased-but,-decreased-in-testing-set-as-the-latent-features-increased.">&#182;</a></h1><h1 id="that-is-because-we-had-only-20-users-in-the-test-set-that's-mean-we-had-a-cold-start-problem-and-for-better-performance-we-should-use-content-based-recommendations.">that is because we had only 20 users in the test set that's mean we had a cold start problem and for better performance we should use content based recommendations.<a class="anchor-link" href="#that-is-because-we-had-only-20-users-in-the-test-set-that's-mean-we-had-a-cold-start-problem-and-for-better-performance-we-should-use-content-based-recommendations.">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="An-A/B-test-could-be-performed-to-determine-whether-the-recommendations-are-an-improvement-to-how-users-currently-find-articles.-We-can-split-users--into-2-groups-(experimental-group-and-control-group)-one-get-the-old-recommendation-and-the-other-gets-the-new-one,-then-apply-some-analysis-to-determine-which-best">An A/B test could be performed to determine whether the recommendations are an improvement to how users currently find articles. We can split users  into 2 groups (experimental group and control group) one get the old recommendation and the other gets the new one, then apply some analysis to determine which best<a class="anchor-link" href="#An-A/B-test-could-be-performed-to-determine-whether-the-recommendations-are-an-improvement-to-how-users-currently-find-articles.-We-can-split-users--into-2-groups-(experimental-group-and-control-group)-one-get-the-old-recommendation-and-the-other-gets-the-new-one,-then-apply-some-analysis-to-determine-which-best">&#182;</a></h1>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[48]:</div>
@@ -16069,19 +16104,6 @@ The top 10 recommendations for user 20 are the following article names:
 
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
